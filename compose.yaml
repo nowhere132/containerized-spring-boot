@@ -6,6 +6,7 @@ networks:
 services:
   postgres:
     image: 'postgres:latest'
+    container_name: postgres
     environment:
       - 'POSTGRES_DB=postgres'
       - 'POSTGRES_PASSWORD=secret'
@@ -22,7 +23,7 @@ services:
     networks:
       - spring-boot
     ports:
-      - '9187'
+      - '9187:9187'
     environment:
       - DATA_SOURCE_URI=postgres:5432/postgres?sslmode=disable
       - DATA_SOURCE_USER=postgres
@@ -42,8 +43,8 @@ services:
     networks:
       - spring-boot
     ports:
-      - '9093'
-      - '9094'
+      - '9093:9093'
+      - '9094:9094'
     restart: on-failure
 
   kowl:
