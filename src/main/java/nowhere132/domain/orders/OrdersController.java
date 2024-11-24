@@ -1,6 +1,6 @@
 package nowhere132.domain.orders;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +13,8 @@ import java.util.Random;
 
 @RestController
 @RequestMapping("/orders")
+@AllArgsConstructor
 public class OrdersController {
-    @Autowired
     private OrdersRepository ordersRepository;
 
     private List<Order> cachedOrders;

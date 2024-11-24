@@ -2,17 +2,17 @@ package nowhere132.ports;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import nowhere132.domain.orders.Order;
 import nowhere132.domain.orders.OrdersRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
+@AllArgsConstructor
 public class HftInputPort {
-    @Autowired
     private OrdersRepository ordersRepository;
 
     private final ObjectMapper mapper = new ObjectMapper();
