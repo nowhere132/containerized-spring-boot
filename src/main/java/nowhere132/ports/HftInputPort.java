@@ -3,6 +3,7 @@ package nowhere132.ports;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import nowhere132.domain.orders.Order;
 import nowhere132.domain.orders.OrdersRepository;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class HftInputPort {
     private OrdersRepository ordersRepository;
 
@@ -19,7 +21,7 @@ public class HftInputPort {
 
     @KafkaListener(topics = "hft.sync.orders")
     public void listenOrderEvent(String message) {
-        System.out.println("Received order event: " + message);
+        log.info("Received order event: {}", message);
 
         var order = tryParseOrder(message);
         if (order.isEmpty()) return;
@@ -27,7 +29,7 @@ public class HftInputPort {
         try {
             ordersRepository.save(order.get());
         } catch (RuntimeException e) {
-            System.err.println("Save order failed: " + e.getMessage());
+            log.warn("Save order failed: {}", e.getMessage());
             e.printStackTrace();
         }
     }
@@ -37,7 +39,7 @@ public class HftInputPort {
             var order = mapper.readValue(message, Order.class);
             return Optional.of(order);
         } catch (JsonProcessingException e) {
-            System.err.println("Invalid order " + message);
+            log.warn("Invalid order {}", message);
             return Optional.empty();
         }
     }
