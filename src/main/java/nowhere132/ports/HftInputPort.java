@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nowhere132.domain.orders.Order;
+import nowhere132.domain.orders.OrderEntity;
 import nowhere132.domain.orders.OrdersRepository;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -34,9 +34,9 @@ public class HftInputPort {
         }
     }
 
-    private Optional<Order> tryParseOrder(String message) {
+    private Optional<OrderEntity> tryParseOrder(String message) {
         try {
-            var order = mapper.readValue(message, Order.class);
+            var order = mapper.readValue(message, OrderEntity.class);
             return Optional.of(order);
         } catch (JsonProcessingException e) {
             log.warn("Invalid order {}", message);

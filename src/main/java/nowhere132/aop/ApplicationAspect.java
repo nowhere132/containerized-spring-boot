@@ -1,6 +1,7 @@
-package nowhere132.annotations;
+package nowhere132.aop;
 
 import lombok.extern.slf4j.Slf4j;
+import nowhere132.annotations.AlertSlowExecutionTime;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
