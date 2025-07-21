@@ -1,7 +1,8 @@
 package nowhere132.domain.orders;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nowhere132.annotations.AlertSlowExecutionTime;
 import nowhere132.domain.orders.dto.FindExternalOrdersRequest;
@@ -12,18 +13,24 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/orders")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class OrdersController {
     private final OrdersUseCase ordersUseCase;
 
+    @PostConstruct
+    public void debugInit() {
+        log.info("Init controller instance: {}", System.identityHashCode(this));
+    }
+
     @PostMapping()
     private PlaceExternalOrderResponse placeExternalOrder(@RequestBody @Valid PlaceExternalOrderRequest request) {
+        log.info("Handling request with controller: {}", System.identityHashCode(this));
         return ordersUseCase.placeOrder(request);
     }
 
     @GetMapping()
-    @AlertSlowExecutionTime(thresholdInMillis = 1000)
+//    @AlertSlowExecutionTime(thresholdInMillis = 1000)
     private FindExternalOrdersResponse findExternalOrders(FindExternalOrdersRequest request) {
         return ordersUseCase.findOrders(request);
     }

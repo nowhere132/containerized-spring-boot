@@ -17,7 +17,8 @@ import java.util.Date;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-@Entity(name = "orders")
+@Entity(name = "Order")
+@Table(name = "ORDERS")
 public class OrderEntity {
     @Id
     @Column(name = "ID", nullable = false, updatable = false)
