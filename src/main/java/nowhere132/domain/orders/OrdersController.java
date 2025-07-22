@@ -24,14 +24,15 @@ public class OrdersController {
     }
 
     @PostMapping()
-    private PlaceExternalOrderResponse placeExternalOrder(@RequestBody @Valid PlaceExternalOrderRequest request) {
+    // Spring CGLIB proxy can't override or route call to a private method
+    @AlertSlowExecutionTime(thresholdInMillis = 1000)
+    public PlaceExternalOrderResponse placeExternalOrder(@RequestBody @Valid PlaceExternalOrderRequest request) {
         log.info("Handling request with controller: {}", System.identityHashCode(this));
         return ordersUseCase.placeOrder(request);
     }
 
     @GetMapping()
-//    @AlertSlowExecutionTime(thresholdInMillis = 1000)
-    private FindExternalOrdersResponse findExternalOrders(FindExternalOrdersRequest request) {
+    public FindExternalOrdersResponse findExternalOrders(FindExternalOrdersRequest request) {
         return ordersUseCase.findOrders(request);
     }
 }
