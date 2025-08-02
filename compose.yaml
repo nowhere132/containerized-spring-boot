@@ -61,3 +61,14 @@ services:
     depends_on:
       - kafka
     restart: on-failure
+
+  redis:
+    image: bitnami/redis:8.0.3
+    container_name: redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - spring-boot
+    ports:
+      - '6379:6379'
+

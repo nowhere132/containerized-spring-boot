@@ -29,8 +29,7 @@ public class HftInputPort {
         try {
             ordersRepository.save(order.get());
         } catch (RuntimeException e) {
-            log.warn("Save order failed: {}", e.getMessage());
-            e.printStackTrace();
+            log.error("Save order failed: {}", e.getMessage());
         }
     }
 
@@ -39,7 +38,7 @@ public class HftInputPort {
             var order = mapper.readValue(message, OrderEntity.class);
             return Optional.of(order);
         } catch (JsonProcessingException e) {
-            log.warn("Invalid order {}", message);
+            log.error("Invalid order {}", message);
             return Optional.empty();
         }
     }
