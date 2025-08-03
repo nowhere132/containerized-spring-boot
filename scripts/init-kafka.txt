@@ -1,3 +1,0 @@
-{"id":"20241118000001","side":"S","custodycd":"105C000001","acctno":"0001I000001","exchange":"HSX","board":"HSX","symbol":"VND","quote_price":24000,"quote_qtty":200,"exec_amt":0}
-{"id":"20241118000002","side":"S","custodycd":"105C000002","acctno":"0001I000002","exchange":"HSX","board":"HSX","symbol":"SSI","quote_price":22000,"quote_qtty":200,"exec_amt":0}
-{"id":"20241118000003","side":"B","custodycd":"105C000003","acctno":"0001I000003","exchange":"HNX","board":"UPCOM","symbol":"AAA","quote_price":11000,"quote_qtty":1000,"exec_amt":1000000}

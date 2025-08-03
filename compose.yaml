@@ -2,16 +2,20 @@ networks:
   spring-boot:
     driver: bridge
     name: containerized-spring-boot
+volumes:
+  pg-data:
+  grafana-storage:
 
 services:
   postgres:
     image: 'postgres:latest'
     container_name: postgres
     environment:
-      - 'POSTGRES_DB=postgres'
+      - 'POSTGRES_USER=flex'
       - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_DB=trading'
     volumes:
+      - pg-data:/var/lib/postgresql/data
       - ./scripts/init-postgres.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - spring-boot
@@ -19,17 +23,17 @@ services:
       - '5433:5432'
     restart: on-failure
 
-  exporter:
+  postgres_exporter:
     image: quay.io/prometheuscommunity/postgres-exporter
-    container_name: exporter
+    container_name: postgres_exporter
+    environment:
+      - DATA_SOURCE_NAME=postgresql://flex:secret@postgres:5432/trading?sslmode=disable
     networks:
       - spring-boot
     ports:
       - '9187:9187'
-    environment:
-      - DATA_SOURCE_URI=postgres:5433/postgres?sslmode=disable
-      - DATA_SOURCE_USER=postgres
-      - DATA_SOURCE_PASS=secret
+    depends_on:
+      - postgres
 
   kafka:
     image: bitnami/kafka
@@ -72,3 +76,24 @@ services:
     ports:
       - '6379:6379'
 
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./scripts/prometheus.yaml:/etc/prometheus/prometheus.yml
+    networks:
+      - spring-boot
+    ports:
+      - '9090:9090'
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    networks:
+      - spring-boot
+    ports:
+      - '3000:3000'
