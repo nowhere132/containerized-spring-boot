@@ -28,17 +28,16 @@ public class OrdersUseCaseImpl implements OrdersUseCase {
         try {
             holdErrorCode = cashOutputPort.holdFee(new HoldRequest("place-order", referenceId, feeAmt));
         } catch (InterruptedException e) {
-            log.error("Hold fee when {} places {} order {} got interrupted {}", request.getAcctno(), request.getSide(),
+            log.error("Hold fee got interrupted when {} places {} order {}: {}", request.getAcctno(), request.getSide(),
                     request.getSymbol(), e.getMessage());
-            throw new HoldException("Hold fee failed: -001996");
+            throw new HoldException("-001996", "Hold fee got interrupted");
         } catch (TimeoutException e) {
             log.error("Hold fee timed out when {} places {} order {}", request.getAcctno(), request.getSide(), request.getSymbol());
-            throw new HoldException("Hold fee failed: -001999");
+            throw new HoldException("-001999", "Hold fee timed out");
         }
 
-        // TODO: handle hold exception and return proper response to users. for now, its returning Internal Server Error
         if (!"0".equals(holdErrorCode)) {
-            throw new HoldException("Hold fee failed: " + holdErrorCode);
+            throw new HoldException(holdErrorCode, "Hold fee failed");
         }
 
         var order = OrderEntity.builder()
